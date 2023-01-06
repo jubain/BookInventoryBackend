@@ -5,7 +5,7 @@
 namespace AspDotNetWebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate9 : Migration
+    public partial class InitialCreate22 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

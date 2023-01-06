@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221220014537_InitialCreate8")]
-    partial class InitialCreate8
+    [Migration("20230104201524_InitialCreate45")]
+    partial class InitialCreate45
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,52 @@ namespace AspDotNetWebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Address", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("address1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("address2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("city")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("county")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("phone")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("postCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Address");
+                });
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Book", b =>
                 {
@@ -43,6 +89,10 @@ namespace AspDotNetWebApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("authors")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -89,6 +139,12 @@ namespace AspDotNetWebApi.Migrations
                     b.Property<int>("id")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
                     b.HasKey("BookId", "OrderId");
 
                     b.HasIndex("OrderId");
@@ -127,6 +183,9 @@ namespace AspDotNetWebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -137,6 +196,8 @@ namespace AspDotNetWebApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -195,11 +256,14 @@ namespace AspDotNetWebApi.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("name")
+                        .IsUnique();
 
                     b.ToTable("SubCategory");
                 });
@@ -242,9 +306,13 @@ namespace AspDotNetWebApi.Migrations
                     b.Property<string>("middleName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("password")
+                    b.Property<byte[]>("passwordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("passwordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("id");
 
@@ -252,6 +320,17 @@ namespace AspDotNetWebApi.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Address", b =>
+                {
+                    b.HasOne("Asp_Dot_Net_Web_Api.Models.User", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Book", b =>
@@ -286,11 +365,19 @@ namespace AspDotNetWebApi.Migrations
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Order", b =>
                 {
+                    b.HasOne("Asp_Dot_Net_Web_Api.Models.Address", "Address")
+                        .WithMany("Orders")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Asp_Dot_Net_Web_Api.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Address");
 
                     b.Navigation("User");
                 });
@@ -325,6 +412,11 @@ namespace AspDotNetWebApi.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Address", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Book", b =>
                 {
                     b.Navigation("BookOrders");
@@ -349,6 +441,8 @@ namespace AspDotNetWebApi.Migrations
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.User", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Reviews");

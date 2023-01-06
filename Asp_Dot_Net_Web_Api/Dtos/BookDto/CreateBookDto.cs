@@ -6,6 +6,8 @@ namespace Asp_Dot_Net_Web_Api.Dtos.BookDto
         [Required]
         public string name { get; set; }
         [Required]
+        public string description { get; set; }
+        [Required]
         public decimal price { get; set; }
         [Required]
         public int quantity { get; set; }
@@ -20,6 +22,8 @@ namespace Asp_Dot_Net_Web_Api.Dtos.BookDto
 
         [Required]
         public string authors { get; set; }
+        [Required]
+        public string image { get; set; }
     }
 }
 

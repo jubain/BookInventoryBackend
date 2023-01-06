@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221220010814_InitialCreate4")]
-    partial class InitialCreate4
+    [Migration("20221229024416_InitialCreate21")]
+    partial class InitialCreate21
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,32 +24,6 @@ namespace AspDotNetWebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Author", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int?>("Bookid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("firstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("lastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("Bookid");
-
-                    b.ToTable("Author");
-                });
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Book", b =>
                 {
@@ -67,6 +41,14 @@ namespace AspDotNetWebApi.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("authors")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("image")
                         .HasColumnType("nvarchar(max)");
@@ -109,6 +91,12 @@ namespace AspDotNetWebApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("quantity")
                         .HasColumnType("int");
 
                     b.HasKey("BookId", "OrderId");
@@ -173,6 +161,9 @@ namespace AspDotNetWebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -182,7 +173,13 @@ namespace AspDotNetWebApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("review")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
@@ -208,11 +205,14 @@ namespace AspDotNetWebApi.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("name")
+                        .IsUnique();
 
                     b.ToTable("SubCategory");
                 });
@@ -255,9 +255,13 @@ namespace AspDotNetWebApi.Migrations
                     b.Property<string>("middleName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("password")
+                    b.Property<byte[]>("passwordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("passwordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("id");
 
@@ -265,13 +269,6 @@ namespace AspDotNetWebApi.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Author", b =>
-                {
-                    b.HasOne("Asp_Dot_Net_Web_Api.Models.Book", null)
-                        .WithMany("authors")
-                        .HasForeignKey("Bookid");
                 });
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Book", b =>
@@ -317,11 +314,19 @@ namespace AspDotNetWebApi.Migrations
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Review", b =>
                 {
+                    b.HasOne("Asp_Dot_Net_Web_Api.Models.Book", "Book")
+                        .WithMany("Reviews")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Asp_Dot_Net_Web_Api.Models.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
 
                     b.Navigation("User");
                 });
@@ -341,7 +346,7 @@ namespace AspDotNetWebApi.Migrations
                 {
                     b.Navigation("BookOrders");
 
-                    b.Navigation("authors");
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Category", b =>

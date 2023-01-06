@@ -1,14 +1,19 @@
 ﻿
 using Asp_Dot_Net_Web_Api.Dtos.UserDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Asp_Dot_Net_Web_Api.Authorization;
+using Asp_Dot_Net_Web_Api.Models;
+using Asp_Dot_Net_Web_Api.Dtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Asp_Dot_Net_Web_Api.Controllers
 {
     [Route("api/[controller]")]
-    public class UserController : Controller
+
+    public class UserController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
 
@@ -16,12 +21,28 @@ namespace Asp_Dot_Net_Web_Api.Controllers
         {
             _db = db;
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public User getCurrentUser()
+        {
+            var userEmail = User.Identity?.Name;
+            var user = _db.User.Where(u => u.email == userEmail).First();
+            return user;
+
+        }
         // GET: api/values
         [HttpGet]
+        [Authorize]
         public object Get()
         {
-            var users = _db.User;
-            return Ok(users);
+            var loggedInUser = getCurrentUser();
+            if (loggedInUser.isAdmin)
+            {
+                var users = _db.User;
+                return Ok(users);
+            }
+            return Unauthorized("Sorry, You are not authorized!");
+
         }
 
         // GET api/values/5
@@ -33,62 +54,62 @@ namespace Asp_Dot_Net_Web_Api.Controllers
             {
                 return NotFound("Sorry, User not found!");
             }
-            return Ok(userExist);
-        }
-
-        // POST api/values
-        [HttpPost]
-        public object Post([FromBody] CreateUserDto obj)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Sorry, Enter correct values!");
-            }
-            if (_db.User.Any(u => u.email == obj.email))
-            {
-                return BadRequest("Sorry, Email already in use!");
-            }
-            //if (userExist is null)
+            //if (userExist?.email == User.Identity?.Name)
             //{
-            var newUser = new User();
-            newUser.email = obj.email;
-            newUser.password = obj.email;
-            newUser.firstName = obj.email;
-            newUser.middleName = obj.email;
-            newUser.lastName = obj.email;
-            _db.User.Add(newUser);
-            _db.SaveChangesAsync();
-
-            return Ok(obj);
+            //    return Ok(userExist);
+            //}
+            return Ok(userExist);
+            //return Unauthorized("Sorry, You are not authorized!");
         }
 
-        // PUT api/values/5
-        [HttpPatch("{id}")]
-        public object Patch(int id, [FromBody] JsonPatchDocument<User> obj)
+        [HttpPut("{id}")]
+        [Authorize]
+        public object Put(int id, [FromBody] UpdateUserDto user)
         {
-            var userExist = _db.User.Find(id);
-            if (userExist != null)
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (getCurrentUser().isAdmin || getCurrentUser().id == id)
             {
-                obj.ApplyTo(userExist);
-                _db.SaveChangesAsync();
-                return Ok(userExist);
+                var userExist = _db.User.Find(id);
+                if (userExist != null)
+                {
+                    userExist.email = user.email != null ? user.email : userExist.email;
+                    userExist.firstName = user.firstName != null ? user.firstName : userExist.firstName;
+                    userExist.middleName = user.middleName != null ? user.middleName : userExist.middleName;
+                    userExist.lastName = user.lastName != null ? user.lastName : userExist.lastName;
+                    userExist.isCustomer = user.isCustomer.Value;
+                    userExist.isAdmin = user.isAdmin.Value;
+                    userExist.isStaff = user.isStaff.Value;
+                    userExist.UpdatedAt = DateTime.Now;
+                    _db.User.Update(userExist);
+                    _db.SaveChanges();
+                    return Ok("User Updated");
+                }
+                return NotFound("Sorry, Book not found!");
             }
-            return NotFound("Sorry, User not found!");
+            return Unauthorized("Sorry, You are not authorized!");
         }
+
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [Authorize]
         public object Delete(int id)
         {
-            var userExist = _db.User.Find(id);
-            if (userExist == null)
+            if (getCurrentUser().isAdmin)
             {
-                return NotFound("Sorry, User not found!");
+                var userExist = _db.User.Find(id);
+                if (userExist == null)
+                {
+                    return NotFound("Sorry, User not found!");
+                }
+                //if (userExist?.email == User.Identity?.Name)
+
+                _db.User.Remove(userExist);
+                _db.SaveChanges();
+                return Ok("User removed!");
+
             }
-            _db.User.Remove(userExist);
-            _db.SaveChanges();
-            return Ok("User removed!");
+            return Unauthorized("Sorry, You are not authorized!");
         }
     }
 }
-

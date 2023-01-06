@@ -1,29 +1,34 @@
-﻿<Properties StartupConfiguration="{B2F6CE8B-185B-4CCA-9ECA-3F11F36FECB1}|https" GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.DebuggingService.Breakpoints />
+﻿<Properties GitUserInfo="UsingGIT" StartupConfiguration="{B2F6CE8B-185B-4CCA-9ECA-3F11F36FECB1}|https">
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.Asp__Dot__Net__Web__Api PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
-    <FloatingWindows>
-      <FloatingWindow WindowId="1" X="3064" Y="765" Width="855" Height="711">
-        <Files>
-          <File FileName="Asp_Dot_Net_Web_Api/Controllers/UserController.cs" Line="56" Column="1" />
-          <File FileName="Asp_Dot_Net_Web_Api/Controllers/WeatherForecastController.cs" Line="1" Column="1" />
-          <File FileName="Asp_Dot_Net_Web_Api/Controllers/OrderController.cs" Line="1" Column="1" />
-          <File FileName="Asp_Dot_Net_Web_Api/Controllers/BookController.cs" Line="1" Column="1" />
-        </Files>
-      </FloatingWindow>
-    </FloatingWindows>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Asp_Dot_Net_Web_Api/Controllers/UserController.cs">
+    <Files>
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/ReviewController.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/Book.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/CreateCategoryDtoClass.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/BookDto/CreateBookDto.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/BookController.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/UpdateBookDto.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/RegisterDto.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/BaseEntity.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/Review.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Program.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/UserController.cs" Line="110" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/UpdateUserDto.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/User.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/UserDtos/CreateUserDto.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/AuthController.cs" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Asp_Dot_Net_Web_Api" expanded="True">
             <Node name="Asp_Dot_Net_Web_Api" expanded="True">
-              <Node name="Controllers" expanded="True">
-                <Node name="BookController.cs" selected="True" />
-              </Node>
+              <Node name="Authorization" expanded="True" />
+              <Node name="Controllers" expanded="True" />
               <Node name="Data" expanded="True" />
               <Node name="Dtos" expanded="True">
+                <Node name="BookDto" expanded="True" />
                 <Node name="UserDtos" expanded="True" />
               </Node>
               <Node name="Models" expanded="True" />
@@ -33,5 +38,9 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Asp__Dot__Net__Web__Api PreferredExecutionTarget="/Applications/Firefox Developer Edition.app" />
   <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
 </Properties>

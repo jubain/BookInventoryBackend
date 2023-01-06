@@ -6,6 +6,8 @@ namespace Asp_Dot_Net_Web_Api.Dtos
         [Required]
         public int userId { get; set; }
         [Required]
+        public int addressId { get; set; }
+        [Required]
         public BookObject[] Books { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221220014912_InitialCreate9")]
-    partial class InitialCreate9
+    [Migration("20221228010542_InitialCreate20")]
+    partial class InitialCreate20
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,12 @@ namespace AspDotNetWebApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("quantity")
                         .HasColumnType("int");
 
                     b.HasKey("BookId", "OrderId");
@@ -195,11 +201,14 @@ namespace AspDotNetWebApi.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("name")
+                        .IsUnique();
 
                     b.ToTable("SubCategory");
                 });
@@ -242,9 +251,13 @@ namespace AspDotNetWebApi.Migrations
                     b.Property<string>("middleName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("password")
+                    b.Property<byte[]>("passwordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("passwordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("id");
 

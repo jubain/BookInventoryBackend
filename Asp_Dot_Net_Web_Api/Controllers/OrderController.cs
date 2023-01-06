@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
 using Asp_Dot_Net_Web_Api.Dtos;
 using Asp_Dot_Net_Web_Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
+using Stripe;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Asp_Dot_Net_Web_Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -22,17 +28,48 @@ namespace Asp_Dot_Net_Web_Api.Controllers
         {
             _db = db;
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public User getCurrentUser()
+        {
+            var userEmail = User.Identity?.Name;
+            var user = _db.User.Where(u => u.email == userEmail).First();
+            return user;
+        }
+
+
         // GET: api/values
         [HttpGet]
         public object Get()
         {
-            var orders = _db.Order;
-            if (orders.Count() == 0)
+            if (getCurrentUser() != null)
             {
-                return NotFound("No orders found");
+                List<Order> orders = _db.Order.Where(o => o.UserId == getCurrentUser().id).ToList();
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+
+                string json = JsonConvert.SerializeObject(orders, settings);
+                return Ok(json);
             }
-            return Ok(orders);
+            return Unauthorized("Sorry, You are not authorized!");
         }
+
+        //[HttpGet]
+        //public object Get()
+        //{
+        //    if (getCurrentUser().isAdmin)
+        //    {
+        //        var orders = _db.Order;
+        //        if (orders.Count() == 0)
+        //        {
+        //            return NotFound("No orders found");
+        //        }
+        //        return Ok(orders);
+        //    }
+        //    return Unauthorized("Sorry, You are not authorized!");
+        //}
 
         // GET api/values/5
         [HttpGet("{id}")]
@@ -53,9 +90,10 @@ namespace Asp_Dot_Net_Web_Api.Controllers
             try
             {
                 var user = _db.User.Find(order.userId);
-                if (user == null) return NotFound("User not found!");
+                var address = _db.Address.Find(order.addressId);
 
-
+                if (user == null || address == null) return NotFound("User or address not found!");
+                if (address == null) return NotFound("Address not found!");
                 foreach (BookObject o in order.Books)
                 {
                     var book = _db.Book.Find(o.BookId);
@@ -67,7 +105,11 @@ namespace Asp_Dot_Net_Web_Api.Controllers
 
                 var newUserOrder = new Order
                 {
-                    UserId = order.userId,
+                    UserId = getCurrentUser().id,
+                    AddressId = order.addressId,
+                    Address = address,
+                    User = getCurrentUser()
+
                 };
                 _db.Order.Add(newUserOrder);
                 _db.SaveChanges();
@@ -80,7 +122,7 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                     {
                         var newBookOrder = new BookOrder { BookId = o.BookId, quantity = o.quantity, price = book.price * o.quantity, OrderId = newUserOrder.id };
                         _db.BookOrders.Add(newBookOrder);
-
+                        book.quantity = book.quantity - o.quantity;
                     }
                 }
                 _db.SaveChanges();
@@ -92,6 +134,8 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                 return BadRequest(error.Message);
             }
         }
+
+
 
         // PATCH api/values/5
         [HttpPatch("{id}")]
@@ -108,8 +152,17 @@ namespace Asp_Dot_Net_Web_Api.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public object Delete(int id)
         {
+            var order = _db.Order.Find(id);
+            if (order == null) return NotFound("Sorry, order not found!");
+            if (getCurrentUser().id == order.UserId)
+            {
+                _db.Order.Remove(order);
+                _db.SaveChanges();
+                return Ok("Order removed!");
+            }
+            return Unauthorized("Sorry, You are not authorized!");
         }
     }
 }

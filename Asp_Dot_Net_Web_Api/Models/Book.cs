@@ -13,6 +13,8 @@ namespace Asp_Dot_Net_Web_Api.Models
         [Required]
         public string name { get; set; }
         [Required]
+        public string description { get; set; }
+        [Required]
         public decimal price { get; set; }
         [Required]
         public int quantity { get; set; }
@@ -24,14 +26,14 @@ namespace Asp_Dot_Net_Web_Api.Models
 
         [Required]
         public int SubCategoryId { get; set; }
-        public SubCategory SubCategory { get; set; }
+        public SubCategory? SubCategory { get; set; }
 
         public string? image { get; set; }
         [Required]
         public string authors { get; set; }
 
-        public ICollection<BookOrder> BookOrders { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public ICollection<BookOrder>? BookOrders { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
     }
 }
 

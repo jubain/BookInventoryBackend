@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using Asp_Dot_Net_Web_Api.Models;
 
 namespace Asp_Dot_Net_Web_Api.Data
@@ -14,18 +15,26 @@ namespace Asp_Dot_Net_Web_Api.Data
         public DbSet<Book> Book { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<SubCategory> SubCategory { get; set; }
+        public DbSet<Address> Address { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<BookOrder> BookOrders { get; set; }
         public DbSet<Review> Review { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             // User and Order
-            modelBuilder.Entity<User>().HasMany(u => u.Orders).WithOne(o => o.User).HasForeignKey(o => o.UserId);
+            modelBuilder.Entity<User>().HasMany(u => u.Orders).WithOne(o => o.User).HasForeignKey(o => o.UserId).OnDelete(DeleteBehavior.NoAction);
             // User and Review
             modelBuilder.Entity<User>().HasMany(u => u.Reviews).WithOne(o => o.User).HasForeignKey(o => o.UserId);
+            // User and Address
+            modelBuilder.Entity<User>().HasMany(u => u.Addresses).WithOne(o => o.User).HasForeignKey(o => o.UserId).OnDelete(DeleteBehavior.NoAction);
+            // Order and Address
+            modelBuilder.Entity<Address>().HasMany(u => u.Orders).WithOne(o => o.Address).HasForeignKey(o => o.AddressId).OnDelete(DeleteBehavior.NoAction);
+
+
             // Book and Review
             modelBuilder.Entity<Book>().HasMany(u => u.Reviews).WithOne(o => o.Book).HasForeignKey(o => o.BookId);
 

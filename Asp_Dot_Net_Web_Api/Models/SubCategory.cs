@@ -1,7 +1,9 @@
 ﻿using System;
+using IndexAttribute = Microsoft.EntityFrameworkCore.IndexAttribute;
 
 namespace Asp_Dot_Net_Web_Api.Models
 {
+    [Index(nameof(name), IsUnique = true)]
     public class SubCategory : BaseEntity
     {
         [Key]
