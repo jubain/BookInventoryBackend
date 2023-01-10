@@ -180,9 +180,6 @@ namespace AspDotNetWebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -193,8 +190,6 @@ namespace AspDotNetWebApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -279,6 +274,9 @@ namespace AspDotNetWebApi.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("deactivated")
+                        .HasColumnType("bit");
+
                     b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -324,7 +322,7 @@ namespace AspDotNetWebApi.Migrations
                     b.HasOne("Asp_Dot_Net_Web_Api.Models.User", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -362,19 +360,11 @@ namespace AspDotNetWebApi.Migrations
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Order", b =>
                 {
-                    b.HasOne("Asp_Dot_Net_Web_Api.Models.Address", "Address")
-                        .WithMany("Orders")
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Asp_Dot_Net_Web_Api.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("User");
                 });
@@ -407,11 +397,6 @@ namespace AspDotNetWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Address", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Asp_Dot_Net_Web_Api.Models.Book", b =>

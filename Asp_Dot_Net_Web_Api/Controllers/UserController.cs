@@ -72,6 +72,7 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                 var userExist = _db.User.Find(id);
                 if (userExist != null)
                 {
+
                     userExist.email = user.email != null ? user.email : userExist.email;
                     userExist.firstName = user.firstName != null ? user.firstName : userExist.firstName;
                     userExist.middleName = user.middleName != null ? user.middleName : userExist.middleName;
@@ -79,6 +80,11 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                     userExist.isCustomer = user.isCustomer.Value;
                     userExist.isAdmin = user.isAdmin.Value;
                     userExist.isStaff = user.isStaff.Value;
+                    if (user.deactivated != null)
+                    {
+                        userExist.deactivated = user.deactivated.Value;
+                    }
+
                     userExist.UpdatedAt = DateTime.Now;
                     _db.User.Update(userExist);
                     _db.SaveChanges();
@@ -103,7 +109,7 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                     return NotFound("Sorry, User not found!");
                 }
                 //if (userExist?.email == User.Identity?.Name)
-
+                if (!userExist.deactivated) return Unauthorized("Sorry, no account deactivation request found!");
                 _db.User.Remove(userExist);
                 _db.SaveChanges();
                 return Ok("User removed!");

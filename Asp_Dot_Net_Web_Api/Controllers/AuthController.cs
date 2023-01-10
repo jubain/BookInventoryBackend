@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Asp_Dot_Net_Web_Api.Dtos;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -80,16 +81,30 @@ namespace Asp_Dot_Net_Web_Api.Controllers
             var userExist = _db.User.Find(id);
             if (userExist != null)
             {
+                if (user.deactivateRequest == true)
+                {
+                    userExist.deactivateRequest = true;
+                    _db.User.Update(userExist);
+                    _db.SaveChanges();
+                    return Ok("User Updated");
+                }
                 userExist.email = user.email;
                 userExist.firstName = user.firstName;
                 userExist.middleName = user.middleName;
                 userExist.lastName = user.lastName;
+                
                 userExist.UpdatedAt = DateTime.Now;
+                if (user.password != null)
+                {
+                    CreatePasswordHash(user.password, out byte[] passwordHash, out byte[] passwordSalt);
+                    userExist.passwordHash = passwordHash;
+                    userExist.passwordSalt = passwordSalt;
+                }
                 _db.User.Update(userExist);
                 _db.SaveChanges();
                 return Ok("User Updated");
             }
-            return NotFound("Sorry, Book not found!");
+            return NotFound("Sorry, User not found!");
 
         }
 
@@ -99,6 +114,7 @@ namespace Asp_Dot_Net_Web_Api.Controllers
             if (!ModelState.IsValid) return BadRequest("Fill all the fields!");
             var user = _db.User.SingleOrDefault(u => u.email == request.email);
             if (user == null) return BadRequest("Wrong Email or Password!");
+            if (user.deactivated) return BadRequest("Sorry, your account is deactivated, Please wait to get activated!");
             if (!VerifyPasswordHash(request.password, user.passwordHash, user.passwordSalt)) return BadRequest("Wrong Email or Password!");
             string token = CreateToken(user);
             var userObj = new

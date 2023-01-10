@@ -17,6 +17,9 @@ namespace Asp_Dot_Net_Web_Api.Dtos
         public bool? isAdmin { get; set; } = false;
         [DefaultValue(false)]
         public bool? isStaff { get; set; } = false;
+        
+        public bool? deactivated { get; set; } = false;
+        public bool? deactivateRequest { get; set; } = false;
     }
 }
 

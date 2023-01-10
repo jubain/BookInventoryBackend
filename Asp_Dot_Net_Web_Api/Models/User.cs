@@ -29,7 +29,9 @@ namespace Asp_Dot_Net_Web_Api.Models
         public bool isStaff { get; set; } = false;
 
         public bool isAdmin { get; set; } = false;
-        
+
+        public bool deactivated { get; set; } = false;
+        public bool deactivateRequest { get; set; } = false;
         public ICollection<Order> Orders { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Address> Addresses { get; set; }

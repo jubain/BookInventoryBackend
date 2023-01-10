@@ -55,6 +55,7 @@
     <None Remove="Microsoft.AspNetCore.Authorization" />
     <None Remove="Stripe.net" />
     <None Remove="Microsoft.EntityFrameworkCore.Relational" />
+    <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -64,5 +65,6 @@
     <Folder Include="Dtos\UserDtos\" />
     <Folder Include="Dtos\BookDto\" />
     <Folder Include="Authorization\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

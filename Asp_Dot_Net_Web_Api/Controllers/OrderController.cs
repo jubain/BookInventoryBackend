@@ -106,8 +106,8 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                 var newUserOrder = new Order
                 {
                     UserId = getCurrentUser().id,
-                    AddressId = order.addressId,
-                    Address = address,
+                    //AddressId = order.addressId,
+                    //Address = address,
                     User = getCurrentUser()
 
                 };
