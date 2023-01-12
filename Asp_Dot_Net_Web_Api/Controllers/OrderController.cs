@@ -106,8 +106,8 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                 var newUserOrder = new Order
                 {
                     UserId = getCurrentUser().id,
-                    //AddressId = order.addressId,
-                    //Address = address,
+                    AddressId = order.addressId,
+                    Address = address,
                     User = getCurrentUser()
 
                 };
@@ -158,9 +158,15 @@ namespace Asp_Dot_Net_Web_Api.Controllers
             if (order == null) return NotFound("Sorry, order not found!");
             if (getCurrentUser().id == order.UserId)
             {
-                _db.Order.Remove(order);
-                _db.SaveChanges();
-                return Ok("Order removed!");
+                var bookOrder = _db.BookOrders.Where(b => b.OrderId == order.id).First();
+                if (bookOrder != null)
+                {
+                    _db.BookOrders.Remove(bookOrder);
+                    _db.Order.Remove(order);
+                    _db.SaveChanges();
+                    return Ok("Order removed!");
+                }
+
             }
             return Unauthorized("Sorry, You are not authorized!");
         }

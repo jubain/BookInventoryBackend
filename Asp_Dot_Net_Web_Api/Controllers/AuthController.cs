@@ -129,8 +129,6 @@ namespace Asp_Dot_Net_Web_Api.Controllers
                 user.isStaff
             };
             return Ok(new { token, user.id, userObj });
-            //return Ok(Json(new { token = token, userId = user.id }));
-            //return Ok(new { token = token, userId = user.id });
         }
 
 

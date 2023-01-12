@@ -1,16 +1,22 @@
-﻿<Properties GitUserInfo="UsingGIT" StartupConfiguration="{B2F6CE8B-185B-4CCA-9ECA-3F11F36FECB1}|https">
+﻿<Properties StartupConfiguration="{B2F6CE8B-185B-4CCA-9ECA-3F11F36FECB1}|https" GitUserInfo="UsingGIT">
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.Workbench ActiveDocument="Asp_Dot_Net_Web_Api/Controllers/AuthController.cs">
     <Files>
-      <File FileName="Asp_Dot_Net_Web_Api/Controllers/AuthController.cs" Line="83" Column="14" />
-      <File FileName="Asp_Dot_Net_Web_Api/Controllers/UserController.cs" />
-      <File FileName="Asp_Dot_Net_Web_Api/Dtos/UpdateUserDto.cs" Line="6" Column="18" />
-      <File FileName="Asp_Dot_Net_Web_Api/Program.cs" Line="1" Column="1" />
-      <File FileName="Asp_Dot_Net_Web_Api/Controllers/AddressController.cs" Line="17" Column="43" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/AuthController.cs" Line="117" Column="53" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/UpdateUserDto.cs" Line="26" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Program.cs" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/AddressController.cs" Line="31" Column="25" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/User.cs" Line="33" Column="32" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/Order.cs" Line="19" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/Address.cs" Line="28" Column="19" />
+      <File FileName="Asp_Dot_Net_Web_Api/Data/ApplicationDbContext.cs" Line="35" Column="19" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/OrderController.cs" Line="110" Column="37" />
+      <File FileName="Asp_Dot_Net_Web_Api/Controllers/UserController.cs" Line="87" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/Book.cs" Line="1" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/BookOrder.cs" Line="1" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Models/BaseEntity.cs" Line="1" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/UserDtos/CreateUserDto.cs" Line="1" Column="1" />
+      <File FileName="Asp_Dot_Net_Web_Api/Dtos/LoginDto.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -20,6 +26,9 @@
               <Node name="Controllers" expanded="True">
                 <Node name="AuthController.cs" selected="True" />
               </Node>
+              <Node name="Data" expanded="True" />
+              <Node name="Dtos" expanded="True" />
+              <Node name="Migrations" expanded="True" />
               <Node name="Models" expanded="True" />
             </Node>
           </Node>
@@ -27,6 +36,10 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.Asp__Dot__Net__Web__Api PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
